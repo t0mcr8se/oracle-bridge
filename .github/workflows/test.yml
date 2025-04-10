@@ -24,7 +24,13 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: nightly
+      
+      - name: "Install Bun"
+        uses: "oven-sh/setup-bun@v2"
 
+      - name: "Install Node.js dependencies"
+        run: "bun install"
+        
       - name: Show Forge version
         run: |
           forge --version
