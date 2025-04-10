@@ -33,7 +33,12 @@ interface IL1Consumer {
     /// @param l2RequestId The request ID as assigned by the L2 consumer.
     /// @param gasLimit The maximum gas to be used for the Chainlink Functions request.
     /// @return l1RequestId The resulting L1 request ID created on Chainlink Functions.
-    function handleRequest(string calldata source, string[] calldata args, bytes32 l2RequestId, uint32 gasLimit)
+    function handleRequest(
+        string calldata source,
+        string[] calldata args,
+        bytes32 l2RequestId,
+        uint32 gasLimit
+    )
         external
         returns (bytes32 l1RequestId);
 }

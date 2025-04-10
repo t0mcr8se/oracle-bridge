@@ -23,7 +23,11 @@ interface IL2Consumer {
     /// @param args The arguments for the Chainlink request
     /// @param gasLimit The gas limit for the request execution on L1
     /// @return requestId The unique ID generated for the request
-    function sendPayload(string calldata source, string[] calldata args, uint32 gasLimit)
+    function sendPayload(
+        string calldata source,
+        string[] calldata args,
+        uint32 gasLimit
+    )
         external
         returns (bytes32 requestId);
 
