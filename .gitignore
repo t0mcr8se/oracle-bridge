@@ -3,6 +3,9 @@ node_modules/
 cache/
 out/
 
+# vs code files
+.vscode/
+
 # Ignores development broadcast logs
 !/broadcast
 /broadcast/*/31337/
