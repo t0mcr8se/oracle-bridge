@@ -1,66 +1,55 @@
-## Foundry
+# Cross-Chain Communication with Chainlink Functions
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+## Description
+This repository provides an implementation for cross-chain communication between Layer 1 (L1) and Layer 2 (L2) smart contracts using Chainlink Functions for off-chain requests and responses. The contracts allow L2 consumers to send payloads to L1 and receive responses back, facilitating secure and scalable interactions between chains.
 
-Foundry consists of:
+## Dependencies
+- [Foundry](https://book.getfoundry.sh/): For development, testing, and deployment.
+- [Chainlink Contracts](https://github.com/smartcontractkit/chainlink): For integrating Chainlink Functions.
+- [T1 Messenger](https://github.com/t1protocol/t1/tree/canary/contracts/src/L1): A cross-chain messaging system used for sending and receiving messages between L1 and L2.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## Installation
+1. Clone the repository:
+   ```bash
+    git clone https://github.com/t0mcr8se/t1-oracle-bridge.git
+    cd t1-oracle-bridge
+    ```
 
-## Documentation
+2. Install dependencies using bun:
+   ```bash
+   bun instal
+   ```
+> This will install the dependencies of this repo and clone and build the submodules (t1)
 
-https://book.getfoundry.sh/
+3. Build the contracts:
+   ```bash
+   forge build
+   ```
 
-## Usage
+## Contracts Overview
 
-### Build
+| Contract      | Description |
+|---------------|-------------|
+| [`L1Consumer`](./src/L1/L1Consumer.sol)  | Implements the L1 consumer that interacts with Chainlink Functions and sends data to L2. |
+| [`L2Consumer`](./src/L2/L2Consumer.sol)  | Implements the L2 consumer that sends payloads to L1 and handles responses from L1. |
+| [`BaseConsumer`](./src/libraries/BaseConsumer.sol) | A shared base contract providing cross-domain messaging functionality for L1 and L2 consumers. |
 
-```shell
-$ forge build
+## Tests [WIP]
+To run the tests for the contracts, use the following command:
+```bash
+forge test
 ```
+This will run all the test cases defined in the `src/test` directory and provide you with the results.
 
-### Test
+## Deployment [WIP]
+1. Deploy the contracts using Forge:
+   ```bash
+   forge deploy <ContractName> --rpc-url <RPC_URL> --private-key <PRIVATE_KEY>
+   ```
+## ChainLink Subscription Setup
+Set up your ChainLunk account and subscription to Functions, check the [chainlink functions docs](https://docs.chain.link/chainlink-functions) for more info.
 
-```shell
-$ forge test
-```
+> * Set the whitelisted consumer to be L1Consumer *
 
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+## Notice
+This implementation is intended for fast finality Layer 2 solutions and is not recommended for production environments without further optimization, security audits, and stress testing.
