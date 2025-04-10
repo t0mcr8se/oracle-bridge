@@ -1,91 +1,52 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
-import {IL2T1Messenger} from "@t1/L2/IL2T1Messenger.sol";
+import {BaseConsumer} from "../libraries/BaseConsumer.sol";
 import {IL2Consumer} from "./IL2Consumer.sol";
 import {IL1Consumer} from "../L1/IL1Consumer.sol";
+import {IT1Messenger} from "@t1/libraries/IT1Messenger.sol";
 import {ConfirmedOwner} from "@chainlink/contracts/v0.8/shared/access/ConfirmedOwner.sol";
 
+/// @title L2Consumer
+/// @notice This contract is responsible for sending off-chain requests to the L1 consumer and handling responses.
+contract L2Consumer is IL2Consumer, BaseConsumer {
 
-contract L2Consumer is IL2Consumer, ConfirmedOwner {
-    
-    /// @notice t1 canonical bridge on L2 side
-    IL2T1Messenger public immutable messenger;
-
-    /// @notice L1 ChainId to be used on the canonical bridge calls
-    uint64 public immutable l1ChainId;
-
-    /// @notice chainlink functions consumer (handler) address on L1
-    address public l1Consumer;
-    
+    /// @notice Mapping to track whitelisted addresses that can interact with the contract
     mapping (address whitelistedAddress => bool isWhitelisted) whitelist;
 
-    // mapping (bytes32 l2RequestId => boolean);
-
-    // Custom error type
-    error UnexpectedRequestID(bytes32 requestId);
-    error UnauthorizedCaller(address caller);
-    error ConsumerNotInitialized();
-
-    /// @dev The `response` here is not parsed, 
-    event Response(
-        bytes32 indexed requestId,
-        bytes response,
-        bytes err
-    );
-    event RequestSent(
-        bytes32 requestId,
-        string source,
-        string [] args
-    );
-
+    /// @notice Constructor to initialize the contract with the L1 Chain ID and the messenger address.
+    /// @param _messenger The address of the messenger contract for cross-domain communication
+    /// @param _l1ChainId The L1 chain ID for cross-domain messaging
     constructor(
         address _messenger, 
         uint64 _l1ChainId
-    ) ConfirmedOwner(msg.sender) {
-        messenger = IL2T1Messenger(_messenger);
-        l1ChainId = _l1ChainId;
-        whitelist[msg.sender] = true;
+    ) BaseConsumer(_l1ChainId, _messenger) {
+        whitelist[msg.sender] = true; // Add the deployer to the whitelist
     }
 
-    modifier onlyXDomainConsumer() {
-        address sender = messenger.xDomainMessageSender();
-        if(sender != l1Consumer){
-            revert UnauthorizedCaller(sender);
-        }
-        _;
-    }
-
-    modifier consumerInitialized() {
-        if(l1Consumer == address(0)){
-            revert ConsumerNotInitialized();
-        }
-        _;
-    }
-
+    /// @notice Modifier that restricts access to whitelisted addresses only.
     modifier onlyWhiteList() {
         if(!whitelist[msg.sender]){
-            revert UnauthorizedCaller(msg.sender);
+            revert UnauthorizedCaller(msg.sender); // Revert if the caller is not whitelisted
         }
         _;
     }
 
-    function setL1Consumer(address _l1Consumer) external onlyOwner {
-        l1Consumer = _l1Consumer;
-    }
-
+    /// @notice Adds a new address to the whitelist.
+    /// @param a The address to be added to the whitelist
     function addToWhiteList(address a) external onlyOwner {
-        whitelist[a] = true;
+        whitelist[a] = true; // Add the address to the whitelist
     }
 
+    /// @inheritdoc IL2Consumer
     function sendPayload (
         string calldata source, 
         string [] calldata args, 
         uint32 gasLimit
     ) external onlyWhiteList consumerInitialized returns (bytes32 requestId) {
-        requestId = keccak256(abi.encodePacked(source, block.timestamp));
+        requestId = keccak256(abi.encodePacked(source, block.timestamp)); // Generate a unique request ID
 
-
+        // Encode the message to send to L1
         bytes memory message = abi.encodeWithSelector(
             IL1Consumer.handleRequest.selector,
             source,
@@ -94,12 +55,13 @@ contract L2Consumer is IL2Consumer, ConfirmedOwner {
             gasLimit
         );
 
-        messenger.sendMessage(
-            l1Consumer,
+        // Send the message to L1 using the messenger
+        IT1Messenger(messenger).sendMessage(
+            xDomainConsumer,
             0,
             message,
             gasLimit,
-            l1ChainId
+            xChainId
         );
 
         emit RequestSent(
@@ -108,16 +70,17 @@ contract L2Consumer is IL2Consumer, ConfirmedOwner {
             args
         );
 
-        return requestId;
+        return requestId; // Return the request ID
     }
 
+    /// @inheritdoc IL2Consumer
     function handleResponse(
         bytes32 requestId, 
         bytes memory response, 
         bytes memory err
     ) external onlyXDomainConsumer {
-        // TODO: decode response and do something onchain with the result
-        // example: TVL API response
-        emit Response(requestId, response, err);
+        // TODO: Decode response and process it on-chain (example: TVL API response)
+
+        emit Response(requestId, response, err); // Emit the response event
     }
 }

@@ -47,13 +47,13 @@ L1Consumer Checklist:
 - [ ] write _handleRequest internal function with handleRequest logic
 
 BaseConsumer CheckList:
-- [ ] change l1Consumer/l2Consumer to xDomainConsumer
-- [ ] one function to setXDomainConsumer
-- [ ] replace messenger with IT1Messenger
-- [ ] xChainId represents the chainId on the other side
-- [ ] is confirmed owner, initialized in the constructor
-- [ ] modifier onlyXDomainConsumer
-- [ ] modifier consumer initialized
+- [X] change l1Consumer/l2Consumer to xDomainConsumer
+- [X] one function to setXDomainConsumer
+- [X] replace messenger with IT1Messenger
+- [X] xChainId represents the chainId on the other side
+- [X] is confirmed owner, initialized in the constructor
+- [X] modifier onlyXDomainConsumer
+- [X] modifier consumer initialized
 
 Scripts checklist:
 - [ ] Deployment and set up Scripts
