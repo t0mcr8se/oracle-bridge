@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
-import { IBaseConsumer } from "./IBaseConsumer.sol";
-import { ConfirmedOwner } from "@chainlink/contracts/v0.8/shared/access/ConfirmedOwner.sol";
-import { IT1Messenger } from "@t1/libraries/IT1Messenger.sol";
+import {IBaseConsumer} from "./IBaseConsumer.sol";
+import {ConfirmedOwner} from "@chainlink/contracts/v0.8/shared/access/ConfirmedOwner.sol";
+import {IT1Messenger} from "@t1/libraries/IT1Messenger.sol";
 
 /// @title BaseConsumer
 /// @notice Abstract base contract for cross-chain consumers that send/receive messages across domains using a messenger.
 /// @dev Implements ownership checks, x-domain verification, and consumer initialization guard.
 abstract contract BaseConsumer is IBaseConsumer, ConfirmedOwner {
-
     /// @notice Address of the T1 cross-chain messenger contract.
     address public immutable messenger;
-    
+
     /// @notice Chain ID of the cross-domain (external) chain.
     uint64 public immutable xChainId;
 

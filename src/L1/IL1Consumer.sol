@@ -16,12 +16,7 @@ interface IL1Consumer {
     /// @param l2RequestId The ID of the original request from L2.
     /// @param response The raw response bytes returned from Chainlink Functions.
     /// @param err The error data (if any) returned from Chainlink Functions.
-    event Response(
-        bytes32 indexed l1RequestId,
-        bytes32 indexed l2RequestId,
-        bytes response,
-        bytes err
-    );
+    event Response(bytes32 indexed l1RequestId, bytes32 indexed l2RequestId, bytes response, bytes err);
 
     /// @notice Thrown when a callback is received for an unrecognized L1 request ID.
     /// @param requestId The unrecognized L1 request ID.
@@ -38,10 +33,7 @@ interface IL1Consumer {
     /// @param l2RequestId The request ID as assigned by the L2 consumer.
     /// @param gasLimit The maximum gas to be used for the Chainlink Functions request.
     /// @return l1RequestId The resulting L1 request ID created on Chainlink Functions.
-    function handleRequest(
-        string calldata source,
-        string[] calldata args,
-        bytes32 l2RequestId,
-        uint32 gasLimit
-    ) external returns (bytes32 l1RequestId);
+    function handleRequest(string calldata source, string[] calldata args, bytes32 l2RequestId, uint32 gasLimit)
+        external
+        returns (bytes32 l1RequestId);
 }

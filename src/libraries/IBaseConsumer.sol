@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
-
 interface IBaseConsumer {
     /// @notice Sets the address of the cross-domain consumer (on the other chain).
     /// @dev Only callable by the contract owner.

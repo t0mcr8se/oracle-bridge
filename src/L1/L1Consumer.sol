@@ -25,10 +25,10 @@ contract L1Consumer is IL1Consumer, BaseConsumer, FunctionsClient {
     uint64 public subscriptionId;
 
     /// @notice Maps L2 request IDs to their corresponding L1 request IDs
-    mapping (bytes32 l2RequestId => bytes32 l1RequestId) l2RequestIds;
+    mapping(bytes32 l2RequestId => bytes32 l1RequestId) l2RequestIds;
 
     /// @notice Maps L1 request IDs to their originating L2 request IDs
-    mapping (bytes32 l1RequestId => bytes32 l2RequestId) l1RequestIds;
+    mapping(bytes32 l1RequestId => bytes32 l2RequestId) l1RequestIds;
 
     /// @notice Creates a new L1Consumer contract
     /// @param _chainlinkRouter The address of the Chainlink Functions router contract
@@ -36,24 +36,21 @@ contract L1Consumer is IL1Consumer, BaseConsumer, FunctionsClient {
     /// @param _l2ChainId The L2 chain ID this contract is communicating with
     /// @param _subscriptionId The Chainlink Functions billing subscription ID
     /// @param _donId The DON ID representing the Chainlink oracle network on L1
-    constructor(
-        address _chainlinkRouter, 
-        address _messenger, 
-        uint64 _l2ChainId, 
-        uint64 _subscriptionId,
-        bytes32 _donId
-    ) FunctionsClient(_chainlinkRouter) BaseConsumer(_l2ChainId, _messenger) {
+    constructor(address _chainlinkRouter, address _messenger, uint64 _l2ChainId, uint64 _subscriptionId, bytes32 _donId)
+        FunctionsClient(_chainlinkRouter)
+        BaseConsumer(_l2ChainId, _messenger)
+    {
         subscriptionId = _subscriptionId;
         donId = _donId;
     }
 
     /// @inheritdoc IL1Consumer
-    function handleRequest(
-        string calldata source, 
-        string[] calldata args, 
-        bytes32 l2RequestId,
-        uint32 gasLimit
-    ) external consumerInitialized onlyXDomainConsumer returns (bytes32 l1RequestId) {
+    function handleRequest(string calldata source, string[] calldata args, bytes32 l2RequestId, uint32 gasLimit)
+        external
+        consumerInitialized
+        onlyXDomainConsumer
+        returns (bytes32 l1RequestId)
+    {
         if (l2RequestIds[l2RequestId] != BYTES32_ZERO) {
             revert DuplicateL2RequestID(l2RequestId);
         }
@@ -65,12 +62,7 @@ contract L1Consumer is IL1Consumer, BaseConsumer, FunctionsClient {
             req.setArgs(args);
         }
 
-        l1RequestId = _sendRequest(
-            req.encodeCBOR(),
-            subscriptionId,
-            gasLimit,
-            donId
-        );
+        l1RequestId = _sendRequest(req.encodeCBOR(), subscriptionId, gasLimit, donId);
 
         l2RequestIds[l2RequestId] = l1RequestId;
         l1RequestIds[l1RequestId] = l2RequestId;
@@ -82,22 +74,13 @@ contract L1Consumer is IL1Consumer, BaseConsumer, FunctionsClient {
     /// @inheritdoc FunctionsClient
     /// @notice When the ChainLink DON calls this function,
     /// we send a the response in a message to the consumer contract on L2
-    function fulfillRequest(
-        bytes32 requestId,
-        bytes memory response,
-        bytes memory err
-    ) internal override {
+    function fulfillRequest(bytes32 requestId, bytes memory response, bytes memory err) internal override {
         bytes32 l2RequestId = l1RequestIds[requestId];
         if (l2RequestId == BYTES32_ZERO) {
             revert UnexpectedRequestID(requestId);
         }
 
-        bytes memory message = abi.encodeWithSelector(
-            IL2Consumer.handleResponse.selector,
-            l2RequestId,
-            response,
-            err
-        );
+        bytes memory message = abi.encodeWithSelector(IL2Consumer.handleResponse.selector, l2RequestId, response, err);
 
         IT1Messenger(messenger).sendMessage(
             xDomainConsumer,
