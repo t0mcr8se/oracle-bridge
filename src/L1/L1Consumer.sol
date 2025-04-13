@@ -7,7 +7,6 @@ import { BaseConsumer } from "../libraries/BaseConsumer.sol";
 import { IT1Messenger } from "@t1/libraries/IT1Messenger.sol";
 import { FunctionsClient } from "@chainlink/contracts/v0.8/functions/v1_0_0/FunctionsClient.sol";
 import { FunctionsRequest } from "@chainlink/contracts/v0.8/functions/v1_0_0/libraries/FunctionsRequest.sol";
-import { ConfirmedOwner } from "@chainlink/contracts/v0.8/shared/access/ConfirmedOwner.sol";
 
 /// @title L1Consumer
 /// @notice Consumes cross-chain requests from L2, invokes Chainlink Functions on L1, and sends results back to L2.
