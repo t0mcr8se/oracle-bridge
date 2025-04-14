@@ -14,36 +14,34 @@ L2Consumer Checklist:
     - [X] emits RequestSent event
 - [X] handle response from l1
     - [X] check the sender (should be L1 consumer address); (onlyConsumer)
-    - TODO: decode the response from clrouter;
-    - TODO: do something with response
     - [X] emit Response
-- [ ] handleExecutionError from L1
-    - [ ] handles the UnexpectedRequestID
-    - [ ] handles the UnauthorizedCaller
-    - [ ] handles the 
+    - LATER: decode the response from clrouter;
+    - LATER: do something with response
+- LATER: handleExecutionError from L1
+    - LATER: handles the UnexpectedRequestID
+    - LATER: handles the UnauthorizedCaller
+    - LATER: handles the 
 - [ ] internal functions when necessary
-- [ ] docstrings
-- [ ] better interfaces
+- [X] docstrings
+- [X] better interfaces
 
 
 L1Consumer Checklist:
 - [X] Constructor
 - [X] Set L2 Consumer address onlyOwner
-- ??? Crosschain deploy the contract 300 IQ instead of setL2Consumer
 - [X] handle req from L2
     - [X] verify the sender = l2consumer
     - [X] prepare the function call and send it to ChainLink router
     - [X] link the l2RequestId with l1RequestId (from CL)
     - [X] if l2RequestId already exists
         - [X] emit an error
-        - TODO send the error to the l2Consumer
+        - LATER: send the error to the l2Consumer using handleExecutionError selector
     - [X] Emit the request
-    -  TODO send the l1RequestId
 - [X] handle response
     - [X] encode handleL1Response() function
     - [X] Send data to l2consumer using bridge
     - [X] emit response event
-- [ ] better doc strings
+- [X] better doc strings
 - [ ] write _handleRequest internal function with handleRequest logic
 
 BaseConsumer CheckList:
@@ -56,17 +54,19 @@ BaseConsumer CheckList:
 - [X] modifier consumer initialized
 
 Scripts checklist:
-- [ ] Deployment and set up Scripts
+- [X] Deployment and set up Scripts
 
-e2e tests:
-- [ ] integration tests, write a weather API JS snippet
+Tests:
+- [ ] e2e integration test (with weather API js snippet)
+- [ ] Unit test L1Consumer
+- [ ] Unit test L2Consumer
 
 README:
-- [ ] title
-- [ ] description
-- [ ] dependencies
-- [ ] installation
-- [ ] contracts table
-- [ ] tests
-- [ ] Deployment
-- [ ] notice (only for fast finality L2s and not for production)
+- [X] title
+- [X] description
+- [X] dependencies
+- [X] installation
+- [X] contracts table
+- [X] tests
+- [X] Deployment
+- [X] notice (only for fast finality L2s and not for production)
