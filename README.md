@@ -17,7 +17,7 @@ This repository provides an implementation for cross-chain communication between
 
 2. Install dependencies using bun:
    ```bash
-   bun instal
+   bun install
    ```
 > This will install the dependencies of this repo and clone and build the submodules (t1)
 
@@ -46,10 +46,10 @@ This will run all the test cases defined in the `src/test` directory and provide
    ```bash
    forge deploy <ContractName> --rpc-url <RPC_URL> --private-key <PRIVATE_KEY>
    ```
-## ChainLink Subscription Setup
-Set up your ChainLunk account and subscription to Functions, check the [chainlink functions docs](https://docs.chain.link/chainlink-functions) for more info.
+## Chainlink Subscription Setup
+Set up your Chainlink account and subscription to Functions, check the [chainlink functions docs](https://docs.chain.link/chainlink-functions) for more info.
 
-> * Set the whitelisted consumer to be L1Consumer *
+***Dev Notice**: Set the whitelisted consumer to be L1Consumer*
 
 ## Notice
 This implementation is intended for fast finality Layer 2 solutions and is not recommended for production environments without further optimization, security audits, and stress testing.
