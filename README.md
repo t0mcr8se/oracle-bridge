@@ -41,15 +41,23 @@ forge test
 ```
 This will run all the test cases defined in the `src/test` directory and provide you with the results.
 
-## Deployment [WIP]
-1. Deploy the contracts using Forge:
-   ```bash
-   forge deploy <ContractName> --rpc-url <RPC_URL> --private-key <PRIVATE_KEY>
-   ```
 ## Chainlink Subscription Setup
+There are 3 steps to creating a Functions subscription on [Chainlink Functions](https://functions.chain.link/sepolia/new):
+
+1)- **Subscription name**: set the subscription name by signing an onchain transaction to initiate the subscription
+
+2)- **Add funds**: use [Chainlink faucet](https://faucets.chain.link/sepolia) to get test LINK tokens to pay for the subscription
+
+3)- **Add a Consumer**: select "I'll do it later" option since the L1Consumer is not deployed yet
+
 Set up your Chainlink account and subscription to Functions, check the [chainlink functions docs](https://docs.chain.link/chainlink-functions) for more info.
 
-***Dev Notice**: Set the whitelisted consumer to be L1Consumer*
+## Deployment
+run [deploy.sh](./deploy.sh)
+```bash
+bash deploy.sh
+```
+**After deployment of L1Consumer is done, we can set the consumer address on our Chainlink subscription to be the L1Consumer address**
 
 ## Notice
 This implementation is intended for fast finality Layer 2 solutions and is not recommended for production environments without further optimization, security audits, and stress testing.

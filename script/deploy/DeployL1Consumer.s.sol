@@ -9,7 +9,7 @@ import { L1Consumer } from "../../src/L1/L1Consumer.sol";
 
 // solhint-disable var-name-mixedcase
 
-contract DeployL2Consumer is Script, DeploymentUtils {
+contract DeployL1Consumer is Script, DeploymentUtils {
     uint256 private L1_DEPLOYER_PRIVATE_KEY = vm.envUint("L1_DEPLOYER_PRIVATE_KEY");
     uint64 private T1_L2_CHAIN_ID = uint64(vm.envUint("T1_L2_CHAIN_ID"));
     address private L1_T1_MESSENGER_PROXY_ADDR = vm.envAddress("L1_T1_MESSENGER_PROXY_ADDR");
